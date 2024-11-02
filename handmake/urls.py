@@ -25,5 +25,6 @@ urlpatterns = [
     path('admins/',include('admin.urls')),
     path('maker/',include('maker.urls')),
     path('customers/',include('customers.urls')),
-
+    path('categories/',include('categories.urls')),
+    path('reset/',include('users.urls')),
 ]+ static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)

@@ -11,6 +11,8 @@ class Users(AbstractUser):
     is_maker = models.BooleanField(default=False)
     is_customer = models.BooleanField(default=False)
     email = models.EmailField(unique=True)  
+    reset_code = models.IntegerField(null=True, blank=True) 
+    code_expiration  = models.DateTimeField(blank=True, null=True)
     
     def __str__(self):
         return self.username

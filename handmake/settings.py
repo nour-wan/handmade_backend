@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'maker',
     'admin',
     'customers',
+    'categories',
 
 ]
 
@@ -130,6 +131,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# send to EMAIL
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'craftshop2025@gmail.com'  # Your email address
+EMAIL_HOST_PASSWORD = 'ktyk inua bjti qmfl' # i should to get it from App passwords in Signing in to Google  After enabling 2-Step Verification, return to the Security section 
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

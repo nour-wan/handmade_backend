@@ -15,3 +15,6 @@ class IsCustomerUser(BasePermission):
         return bool(request.user and request.user.is_customer)
      
      
+class IsMakerUserIsCustomerUser(BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and (request.user.is_maker or request.user.is_customer))
