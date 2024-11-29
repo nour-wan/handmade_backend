@@ -27,4 +27,5 @@ urlpatterns = [
     path('customers/',include('customers.urls')),
     path('categories/',include('categories.urls')),
     path('reset/',include('users.urls')),
+    path('handcraft/',include('handcrafts.urls')),
 ]+ static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)

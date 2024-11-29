@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'admin',
     'customers',
     'categories',
+    'handcrafts',
 
 ]
 
