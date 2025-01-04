@@ -28,4 +28,8 @@ urlpatterns = [
     path('categories/',include('categories.urls')),
     path('reset/',include('users.urls')),
     path('handcraft/',include('handcrafts.urls')),
+    path('rating/',include('rating.urls')),
+    path('comment/',include('comment.urls')),
+    path('discount/',include('discount.urls')),
+    # path('order/',include('order.urls')),
 ]+ static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)

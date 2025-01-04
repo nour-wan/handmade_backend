@@ -9,14 +9,14 @@ from django.contrib.auth.hashers import check_password
 from users.models import Users
 
 class AdminSignupSerializer(serializers.ModelSerializer):
-    name = serializers.CharField( required=True)
+    # name = serializers.CharField( required=True)
     phone_number = serializers.IntegerField( required=True)
     telegram_id = serializers.CharField( required=True)
     company_name= serializers.CharField( required=True)
 
     class Meta:
         model = Users
-        fields = [ 'username' , 'email', 'password', 'name','phone_number','telegram_id','company_name']
+        fields = [ 'username' , 'email', 'password','phone_number','telegram_id','company_name']
         extra_kwargs={
             'password':{'write_only':True}
         } 
@@ -38,7 +38,7 @@ class AdminSignupSerializer(serializers.ModelSerializer):
         user.save()
         Admin.objects.create(
             user=user,
-            name=self.validated_data['name'],
+            # name=self.validated_data['name'],
             phone_number =self.validated_data['phone_number'],
             telegram_id = self.validated_data['telegram_id'],
             company_name= self.validated_data['company_name'],

@@ -9,12 +9,12 @@ from django.contrib.auth.hashers import check_password
 from users.models import Users
 
 class CustomerSignupSerializer(serializers.ModelSerializer):
-    name = serializers.CharField( required=True)
+    # name = serializers.CharField( required=True)
     phone_number = serializers.IntegerField( required=True)
 
     class Meta:
         model = Users
-        fields = [ 'username' , 'email', 'password', 'name','phone_number']
+        fields = [ 'username' , 'email', 'password','phone_number']
         extra_kwargs={
             'password':{'write_only':True}
         } 
@@ -36,7 +36,7 @@ class CustomerSignupSerializer(serializers.ModelSerializer):
         user.save()
         Customer.objects.create(
             user=user,
-            name=self.validated_data['name'],
+            # name=self.validated_data['name'],
             phone_number =self.validated_data['phone_number'],
         )
         return user   

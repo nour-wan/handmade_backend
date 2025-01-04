@@ -15,8 +15,10 @@ class HandcraftList(generics.RetrieveAPIView):
                 
     def get(self,request):
         user = request.user 
-        maker = user.is_maker
+        maker = user.maker
         maker_id = maker.id
+        print("makerId is ####")
+        print(maker_id)
         handcraft=Handcraft.objects.filter(maker_id = maker_id)
         serializer = HandcraftSerializer(handcraft,many=True)
         # print(categories)
@@ -27,7 +29,7 @@ class HandcraftList(generics.RetrieveAPIView):
     
     def post(self,request):
         user = request.user 
-        maker = user.is_maker
+        maker = user.maker
         maker_id = maker.id
         serializer = HandcraftSerializer(data=request.data)
         if serializer.is_valid():

@@ -33,7 +33,6 @@ class RegisterView(generics.GenericAPIView):
             "admin_id": customer.id,
             "username": user.username,
             "email": user.email,
-            "name": customer.name,
             "phone_number": customer.phone_number,
         }
         return Response({
@@ -57,7 +56,6 @@ class LoginView(ObtainAuthToken):
             "admin_id": customer.id,
             "username": user.username,
             "email": user.email,
-            "name": customer.name,
             "phone_number": customer.phone_number,
         }
         return Response({
@@ -75,7 +73,6 @@ class LogoutView(APIView):
             "admin_id": "",
             "username": "",
             "email":"" ,
-            "name": "",
             "phone_number":"" ,
         }
         return Response({

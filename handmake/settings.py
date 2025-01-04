@@ -46,7 +46,10 @@ INSTALLED_APPS = [
     'customers',
     'categories',
     'handcrafts',
-
+    'rating',
+    'comment',
+    'discount',
+    # 'order',
 ]
 
 MIDDLEWARE = [
@@ -90,8 +93,8 @@ DATABASES = {
         'NAME': 'handmake_db',
         'USER': 'root',
         'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',  
+        'HOST': '199.192.19.220',
+        'PORT': '1220',  
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },

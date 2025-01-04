@@ -7,7 +7,7 @@ from users.models import Users
 # Create your models here.
 class Maker(models.Model):
     user = models.OneToOneField(Users , related_name="maker", on_delete=models.PROTECT)
-    name = models.CharField(max_length = 50 )
+    # name = models.CharField(max_length = 50 )
     phone_number = models.IntegerField()
     telegram_id = models.CharField( max_length = 50)
     image = models.ImageField(upload_to= 'maker_profile/')

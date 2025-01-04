@@ -7,7 +7,7 @@ from users.models import Users
 # Create your models here.
 class Customer(models.Model):
     user = models.OneToOneField(Users , related_name="customer", on_delete=models.PROTECT)
-    name = models.CharField(max_length = 50 )
+    # name = models.CharField(max_length = 50 )
     phone_number = models.IntegerField()
    
 
