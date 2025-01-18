@@ -31,5 +31,5 @@ urlpatterns = [
     path('rating/',include('rating.urls')),
     path('comment/',include('comment.urls')),
     path('discount/',include('discount.urls')),
-    # path('order/',include('order.urls')),
+    path('order/',include('order.urls')),
 ]+ static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)

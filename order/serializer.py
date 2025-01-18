@@ -1,36 +1,40 @@
 from rest_framework import serializers
-from .models import Order, OrderClothes
-class OrderClothesSerializer(serializers.ModelSerializer):
+from .models import Order, OrderHandcraft
+from handcrafts.models import Handcraft
+from handcrafts.serializer import HandcraftSerializer
+class OrderHandcraftSerializer(serializers.ModelSerializer):
+    handcraft = HandcraftSerializer()
     class Meta:
-        model = OrderClothes
-        fields =  ['clothes','quantity','price']
+        model = OrderHandcraft
+        fields =  ['handcraft','quantity','price']
 
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    # customer = serializers.IntegerField()
-    # delivery = serializers.BooleanField()
-    # clothes = serializers.ListField(child=OrderClothesSerializer())
-    # design = serializers.ListField(child = DiscountSerializer())
+    orderhandcrafts=OrderHandcraftSerializer(many=True,read_only=True)
     class Meta:
         model = Order
-        fields =  '__all__'
-    def to_array(order, design_order):
-        return {
-            "id":order.id,
-            "total_price":order.total_price,
-            "date":order.date,
-            "time":order.time,
-            "delivery":order.delivery,
-            "location":order.location,
-            "latitude":order.latitude,
-            "longitude":order.longitude,
-            "cost":order.cost,
-            "customer_phone" : order.customer_phone,
-            "customer":order.customer.id,
-            "clothes": OrderClothesSerializer(OrderClothes.objects.filter(order = order.id), many=True).data,
-            "design": DesignSerializer.to_array(design_order),
-        }  
+        fields = ['id', 'full_price',
+                  'date_of_order', 'time_of_order', 
+                  'delivery', 'full_cost', 'customer_phone',     
+                  'customer', 'orderhandcrafts'] 
+        def to_representation(self, instance):
+            representation = super().to_representation(instance)
+            representation['customer'] = instance.customer.id
+            return representation
+            
+        # fields =  '__all__'
+    # def to_array(order):
+    #     return {
+    #         "id":order.id,
+    #         "full_price":order.full_price,
+    #         "date_of_order":order.date_of_order,
+    #         "time_of_order":order.time_of_order,
+    #         "delivery":order.delivery,
+    #         "cost_for_pice":order.cost_for_pice,
+    #         "customer_phone" : order.customer_phone,
+    #         "customer":order.customer.id,
+    #     }  
 
 
 
