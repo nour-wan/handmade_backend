@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'comment',
     'discount',
     'order',
+    # 'ml_model',
+    'auction',
 ]
 
 MIDDLEWARE = [
