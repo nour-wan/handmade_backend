@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'comment',
     'discount',
     'order',
-    # 'ml_model',
+    'ml_model',
     'auction',
 ]
 

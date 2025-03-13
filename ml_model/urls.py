@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import ProcessImagesView
+from .views import generate_image
 
 urlpatterns = [
-    path('process-images/', ProcessImagesView.as_view(), name='process-images'),
+    path('sofaPillowImage/',generate_image),
 ]
