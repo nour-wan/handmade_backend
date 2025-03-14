@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from handcrafts.serializer import HandcraftSerializer
+
 from .models import Discount, DiscountHandcraft
 
 class DiscountSerializer(serializers.ModelSerializer):
@@ -9,7 +10,9 @@ class DiscountSerializer(serializers.ModelSerializer):
         model = Discount
         fields = '__all__'
         
-        
+
+
+              
 class DiscountHandcraftSerializer(serializers.ModelSerializer):
     class Meta:
         model = DiscountHandcraft

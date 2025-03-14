@@ -3,7 +3,7 @@ from rest_framework import generics ,permissions
 from users.serializer import UserSerializer
 from rest_framework import status
 from rest_framework.response import Response
-from .serializer import HandcraftSerializer
+from .serializer import HandcraftSerializer, HandcraftWithDiscountSerializer
 from .models import Handcraft
 from users.permissions import IsMakerUser, IsAllUser
 # Create your views here.
@@ -115,16 +115,17 @@ class HandcraftDetail(generics.RetrieveAPIView):
     
 class AllHandcraftList(generics.RetrieveAPIView):   
     permission_classes = [permissions.IsAuthenticated&IsAllUser]
-    serialzer_class=UserSerializer 
+    serialzer_class=HandcraftWithDiscountSerializer 
                 
     def get(self,request):
         handcraft=Handcraft.objects.all()
-        serializer = HandcraftSerializer(handcraft,many=True)
+        serializer = HandcraftWithDiscountSerializer(handcraft,many=True)
         # print(categories)
         return Response({
             'message' : 'handcraft get successfully',
             "data":serializer.data
             },status=status.HTTP_200_OK)    
+       
         
 class HandcraftByCategoryList(generics.RetrieveAPIView):   
     permission_classes = [permissions.IsAuthenticated&IsAllUser]
