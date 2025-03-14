@@ -1,11 +1,11 @@
 from rest_framework.response import Response
 
 from maker.models import Maker
-from .serializer import DiscountSerializer
+from .serializer import DiscountHandcraftSerializer, DiscountSerializer
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from django.forms.models import model_to_dict
-from .models import Discount
+from .models import Discount, DiscountHandcraft
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -122,3 +122,32 @@ class DiscountListToMaker(generics.RetrieveAPIView):
                 'message' : 'get successfully',
                 'data' : serializer.data
             },status=status.HTTP_200_OK)
+        
+        
+ 
+
+class DiscountHandcraftList(generics.RetrieveAPIView):   
+    permission_classes = [permissions.IsAuthenticated&IsMakerUser]   
+    serialzer_class=UserSerializer 
+    
+    def post(self, request):
+        discount = request.data.get("discount")
+        handcraft = request.data.get("handcraft")
+        if DiscountHandcraft.objects.filter(discount_id=discount,handcraft_id=handcraft) :
+            return Response({
+                'message' : 'discount handcraft is already exist',
+                'data' : []
+            },status=status.HTTP_400_BAD_REQUEST)
+        serializer = DiscountHandcraftSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                'message' : 'discount handcraft was added successfully',
+                'data' : serializer.data
+            },status=status.HTTP_200_OK)
+        return Response({
+                'message' : 'missing fields',
+                'data' : {}
+            },status=status.HTTP_400_BAD_REQUEST)
+
+        

@@ -4,6 +4,7 @@ urlpatterns = [
     path('',views.DiscountList.as_view()),
     path('<int:pk>',views.DiscountDetail.as_view()),
     path('ToMaker',views.DiscountListToMaker.as_view()),
+    path('addHandcraft',views.DiscountHandcraftList.as_view()),
     # path('create',views.create),
     # path('getAll',views.getAll),
     # path('update/<id>',views.update),

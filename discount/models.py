@@ -1,5 +1,6 @@
 from django.db import models
 
+from handcrafts.models import Handcraft
 from maker.models import Maker
 
 # Create your models here.
@@ -12,3 +13,6 @@ class Discount(models.Model):
     count = models.IntegerField(default=1)
 
 
+class DiscountHandcraft(models.Model):
+    discount = models.ForeignKey(Discount, on_delete=models.CASCADE)
+    handcraft = models.ForeignKey(Handcraft, on_delete=models.CASCADE)
