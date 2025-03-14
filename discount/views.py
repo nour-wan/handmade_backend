@@ -126,7 +126,7 @@ class DiscountListToMaker(generics.RetrieveAPIView):
         
  
 
-class DiscountHandcraftList(generics.RetrieveAPIView):   
+class DiscountHandcraftPost(generics.RetrieveAPIView):   
     permission_classes = [permissions.IsAuthenticated&IsMakerUser]   
     serialzer_class=UserSerializer 
     
@@ -150,4 +150,21 @@ class DiscountHandcraftList(generics.RetrieveAPIView):
                 'data' : {}
             },status=status.HTTP_400_BAD_REQUEST)
 
-        
+class DiscountHandcraftDelete(generics.RetrieveAPIView):   
+    permission_classes = [permissions.IsAuthenticated&IsMakerUser]   
+    serialzer_class=UserSerializer 
+    def delete(self, request,dis,hand): 
+        try:
+             data=DiscountHandcraft.objects.get(discount_id=dis,handcraft_id=hand)
+             data.delete()
+             return Response({
+                 'message' : 'discount handcraft was deleted successfully',
+                 'data' : {}
+             },status=status.HTTP_200_OK)
+        except DiscountHandcraft.DoesNotExist:
+             return Response({
+                 'message' : 'discount handcraft not be found',
+                 'data' : {}
+             },status=status.HTTP_404_NOT_FOUND)
+             
+            
