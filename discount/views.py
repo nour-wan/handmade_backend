@@ -109,3 +109,16 @@ class DiscountDetail(generics.RetrieveAPIView):
 
 
     
+class DiscountListToMaker(generics.RetrieveAPIView):   
+    permission_classes = [permissions.IsAuthenticated&IsMakerUser]   
+    serialzer_class=UserSerializer 
+    def get(self, request):
+        user = request.user 
+        maker = user.maker
+        maker_id = maker.id
+        discount = Discount.objects.filter(maker_id=maker_id)
+        serializer = DiscountSerializer(discount, many=True)
+        return Response({
+                'message' : 'get successfully',
+                'data' : serializer.data
+            },status=status.HTTP_200_OK)

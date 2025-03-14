@@ -10,3 +10,5 @@ class Discount(models.Model):
     from_date = models.CharField(max_length = 50)
     to_date = models.CharField(max_length = 50)
     count = models.IntegerField(default=1)
+
+
