@@ -111,13 +111,18 @@ class DiscountDetail(generics.RetrieveAPIView):
     
 class DiscountListToMaker(generics.RetrieveAPIView):   
     permission_classes = [permissions.IsAuthenticated&IsMakerUser]   
-    serialzer_class=UserSerializer 
+    serializer_class = DiscountSerializer 
     def get(self, request):
         user = request.user 
         maker = user.maker
         maker_id = maker.id
         discount = Discount.objects.filter(maker_id=maker_id)
-        serializer = DiscountSerializer(discount, many=True)
+        serializer = self.serializer_class(discount, many=True)
+        if not discount.exists():
+            return Response({
+                'message': 'No discounts found for this maker.',
+                'data': []
+            }, status=status.HTTP_404_NOT_FOUND)
         return Response({
                 'message' : 'get successfully',
                 'data' : serializer.data
