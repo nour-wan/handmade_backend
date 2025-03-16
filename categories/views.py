@@ -26,11 +26,15 @@ class CategoryList(generics.RetrieveAPIView):
             },status=status.HTTP_200_OK)
     
     def post(self,request):
+        category_name = request.data.get("category_name")
+        if Category.objects.filter(category_name=category_name) :
+            return Response({
+                'message' : 'Category is already exist',
+                'data' : []
+            },status=status.HTTP_400_BAD_REQUEST)
         serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-        #      # Update the number_of_work field for the newly created homework
-           
+            serializer.save()           
             return Response({
                 'message' : 'Category was added successfully',
                 'data' : {}
