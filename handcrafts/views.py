@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from .serializer import HandcraftSerializer, HandcraftWithDiscountSerializer
 from .models import Handcraft
-from users.permissions import IsMakerUser, IsAllUser
+from users.permissions import IsCustomerUser, IsMakerUser, IsAllUser
 # Create your views here.
 
 
@@ -144,3 +144,23 @@ class HandcraftByCategoryList(generics.RetrieveAPIView):
                 'message' : 'Handcraft not be found',
                 'data' : {}
             },status=status.HTTP_404_NOT_FOUND)     
+            
+            
+          
+class HandcraftDetailById(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated&IsCustomerUser]   
+    serialzer_class=UserSerializer
+
+    def get(self, request , pk):
+        try:
+            handcraft = Handcraft.objects.get(id = pk)
+            serializer = HandcraftWithDiscountSerializer(handcraft)
+            return Response({
+                'message' : 'Handcraft was get successfully',
+                'data' :  serializer.data
+            },status=status.HTTP_200_OK)
+        except Handcraft.DoesNotExist:
+            return Response({
+                'message' : 'Handcraft not be found',
+                'data' : {}
+            },status=status.HTTP_404_NOT_FOUND)           
