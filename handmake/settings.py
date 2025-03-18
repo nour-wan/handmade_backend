@@ -95,8 +95,8 @@ DATABASES = {
         'NAME': 'handmake_db',
         'USER': 'handmade_user',
         'PASSWORD': 'mysql1234',
-        'HOST': '199.192.19.220',
-        'PORT': '1220',  
+        'HOST': 'localhost',
+        'PORT': '3306',  
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
