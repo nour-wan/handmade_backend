@@ -11,7 +11,7 @@ class Order(models.Model):
     time_of_order = models.TimeField()
     delivery = models.BooleanField(default=True)
     customer_phone = models.CharField(max_length = 50,null= True , blank=True)
-    full_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0) 
+    # full_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0) 
 
 
 class OrderHandcraft(models.Model):

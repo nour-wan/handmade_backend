@@ -50,7 +50,7 @@ class OrderForCustomer(APIView):
             date_of_order = datetime.date.today()
             time_of_order = datetime.datetime.now().time()
             full_price = 0
-            full_cost = 0
+            # full_cost = 0
             handcraft=  request.data.get('handcraft')
 
             if not customer_phone or not handcraft :
@@ -91,12 +91,12 @@ class OrderForCustomer(APIView):
 
                             except Handcraft.DoesNotExist:
                                 raise Handcraft.DoesNotExist('missing handcraft')
-                            if find_handcraft.handcraft_count - quantity < 0 :
+                            if find_handcraft.handcraft_price - quantity < 0 :
                                 raise ValueError('the quantity is more than what you have')
 
-                            find_handcraft.handcraft_count = find_handcraft.handcraft_count - quantity
+                            find_handcraft.handcraft_price = find_handcraft.handcraft_price - quantity
                             find_handcraft.save()
-                            if find_handcraft.handcraft_cost is not None:
+                            if find_handcraft.handcraft_price is not None:
                                 order_handcraft = OrderHandcraft.objects.create(
                                    order = order,
                                    handcraft = find_handcraft,
@@ -104,21 +104,14 @@ class OrderForCustomer(APIView):
                                    price = find_handcraft.handcraft_price
                                 )
                                 handcraft_order.append(order_handcraft)
-                            # try:
-                        #     discont = Discount.objects.first()
-                        #     print(discont)
-                        #     if discont:
-                        #         order.full_price = order.full_price * discont.precentage
-                        # except Discount.DoesNotExist:
-                        #     raise Discount.DoesNotExist('missing discount')    
-                        # order.save()
+                            
                                 full_price = full_price + (quantity*find_handcraft.handcraft_price)
-                                full_cost = full_cost + (quantity*find_handcraft.handcraft_cost)
+                                # full_cost = full_cost + (quantity*find_handcraft.handcraft_cost)
                             else:
                                 raise ValueError(f"Handcraft cost for {find_handcraft.id} is not set.")
 
                         order.full_price = full_price
-                        order.full_cost = full_cost
+                        # order.full_cost = full_cost
                         order.save()
 
 
