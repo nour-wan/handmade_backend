@@ -256,6 +256,7 @@ def generate_image(request):
 
                 # توليد رابط URL للصورة
                 final_image_url = f"{settings.MEDIA_URL}generated/{final_image_filename}"
+                
 
                 return JsonResponse({"image_url": final_image_url})
 

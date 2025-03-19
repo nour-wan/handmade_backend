@@ -18,7 +18,9 @@ from django.db import transaction
 
 from discount.models import Discount
 
+import logging
 
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 class OrderForAdmin(APIView):
@@ -40,94 +42,101 @@ class OrderForCustomer(APIView):
     permission_classes = [IsCustomerUser] 
     
     def post(self, request):
-        user = request.user 
-        customer = user.customer
-        customer_id = customer.id
-        customer_phone = request.data.get('customer_phone')
-        date_of_order = datetime.date.today()
-        time_of_order = datetime.datetime.now().time()
-        full_price = 0
-        full_cost = 0
-        handcraft=  request.data.get('handcraft')
-        
-        if not customer_phone or not handcraft :
-            return Response({
-                'message' : 'missing fields',
-                'data' : {}
-            },status=status.HTTP_404_NOT_FOUND)
-     
         try:
-            customer1 = Customer.objects.get(id = customer_id)
-        except Customer.DoesNotExist:
+            user = request.user 
+            customer = user.customer
+            customer_id = customer.id
+            customer_phone = request.data.get('customer_phone')
+            date_of_order = datetime.date.today()
+            time_of_order = datetime.datetime.now().time()
+            full_price = 0
+            full_cost = 0
+            handcraft=  request.data.get('handcraft')
+
+            if not customer_phone or not handcraft :
+                return Response({
+                    'message' : 'missing fields',
+                    'data' : {}
+                },status=status.HTTP_404_NOT_FOUND)
+
+            try:
+                customer1 = Customer.objects.get(id = customer_id)
+            except Customer.DoesNotExist:
+                return Response({
+                    'message' : 'missing customer',
+                    'data' : {}
+                },status=status.HTTP_404_NOT_FOUND)
+            try :
+                with transaction.atomic():
+                    order = Order.objects.create(
+                        customer = customer1,
+                        date_of_order = date_of_order,
+                        time_of_order = time_of_order,
+                        customer_phone=customer_phone,
+                    )
+                    if customer_phone:
+                        order.customer_phone = customer_phone
+                        order.save()
+                    handcraft_order = []
+
+
+
+                    if handcraft:
+                        for hc in handcraft:
+                            handcrafts = hc.get('handcraft_id')
+                            quantity = hc.get('quantity')
+
+                            try :
+                                find_handcraft = Handcraft.objects.get(id = handcrafts)
+
+                            except Handcraft.DoesNotExist:
+                                raise Handcraft.DoesNotExist('missing handcraft')
+                            if find_handcraft.handcraft_count - quantity < 0 :
+                                raise ValueError('the quantity is more than what you have')
+
+                            find_handcraft.handcraft_count = find_handcraft.handcraft_count - quantity
+                            find_handcraft.save()
+                            order_handcraft = OrderHandcraft.objects.create(
+                                order = order,
+                                handcraft = find_handcraft,
+                                quantity = quantity,
+                                price = find_handcraft.handcraft_price
+                            )
+                            handcraft_order.append(order_handcraft)
+                            # try:
+                        #     discont = Discount.objects.first()
+                        #     print(discont)
+                        #     if discont:
+                        #         order.full_price = order.full_price * discont.precentage
+                        # except Discount.DoesNotExist:
+                        #     raise Discount.DoesNotExist('missing discount')    
+                        # order.save()
+                            full_price = full_price + (quantity*find_handcraft.handcraft_price)
+                            full_cost = full_cost + (quantity*find_handcraft.handcraft_cost)
+                        order.full_price = full_price
+                        order.full_cost = full_cost
+                        order.save()
+
+
+
+                transaction.commit()    
+                return Response({
+                        'message' : 'order was added successfully',
+                        'data' :  { }   ,   
+                    },status=status.HTTP_200_OK)
+            except (Handcraft.DoesNotExist, ValueError, 
+                    Discount.DoesNotExist) as e :
+                transaction.rollback()      
+                return Response({
+                    'message' : str(e),
+                    'data' : {}
+                },status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            logger.exception("An error occurred: %s", str(e))
             return Response({
-                'message' : 'missing customer',
-                'data' : {}
-            },status=status.HTTP_404_NOT_FOUND)
-        try :
-            with transaction.atomic():
-                order = Order.objects.create(
-                    customer = customer1,
-                    date_of_order = date_of_order,
-                    time_of_order = time_of_order,
-                    customer_phone=customer_phone,
-                )
-                if customer_phone:
-                    order.customer_phone = customer_phone
-                    order.save()
-                handcraft_order = []
-
-
-                
-                if handcraft:
-                    for hc in handcraft:
-                        handcrafts = hc.get('handcraft_id')
-                        quantity = hc.get('quantity')
-
-                        try :
-                            find_handcraft = Handcraft.objects.get(id = handcrafts)
-                            
-                        except Handcraft.DoesNotExist:
-                            raise Handcraft.DoesNotExist('missing handcraft')
-                        if find_handcraft.handcraft_count - quantity < 0 :
-                            raise ValueError('the quantity is more than what you have')
-                           
-                        find_handcraft.handcraft_count = find_handcraft.handcraft_count - quantity
-                        find_handcraft.save()
-                        order_handcraft = OrderHandcraft.objects.create(
-                            order = order,
-                            handcraft = find_handcraft,
-                            quantity = quantity,
-                            price = find_handcraft.handcraft_price
-                        )
-                        handcraft_order.append(order_handcraft)
-                        # try:
-                    #     discont = Discount.objects.first()
-                    #     print(discont)
-                    #     if discont:
-                    #         order.full_price = order.full_price * discont.precentage
-                    # except Discount.DoesNotExist:
-                    #     raise Discount.DoesNotExist('missing discount')    
-                    # order.save()
-                        full_price = full_price + (quantity*find_handcraft.handcraft_price)
-                        full_cost = full_cost + (quantity*find_handcraft.handcraft_cost)
-                    order.full_price = full_price
-                    order.full_cost = full_cost
-                    order.save()
-                    
-
-
-            transaction.commit()    
-            return Response({
-                    'message' : 'order was added successfully',
-                    'data' :  { }   ,   
-                },status=status.HTTP_200_OK)
-        except (Handcraft.DoesNotExist, ValueError, 
-                Discount.DoesNotExist) as e :
-            transaction.rollback()      
-            return Response({
-                'message' : str(e),
-                'data' : {}
-            },status=status.HTTP_404_NOT_FOUND)
+                'message': 'An unexpected error occurred',
+                'data': {}
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)        
      
     def get(self, request):
         user = request.user 
@@ -141,7 +150,7 @@ class OrderForCustomer(APIView):
             data.append(serializer.data) 
         # serializer = OrderSerializer(orders, many=True)
         return Response({
-                'message' : 'get successfully',
+                'message' : 'orders get successfully',
                 'data' : data
             },status=status.HTTP_200_OK)    
 
