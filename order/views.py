@@ -132,10 +132,10 @@ class OrderForCustomer(APIView):
                     'data' : {}
                 },status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            logger.exception("An error occurred: %s", str(e))
+            loggera=logger.exception("An error occurred: %s", str(e))
             return Response({
                 'message': 'An unexpected error occurred',
-                'data': {}
+                'data': {loggera}
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)        
      
     def get(self, request):
