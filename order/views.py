@@ -96,13 +96,14 @@ class OrderForCustomer(APIView):
 
                             find_handcraft.handcraft_count = find_handcraft.handcraft_count - quantity
                             find_handcraft.save()
-                            order_handcraft = OrderHandcraft.objects.create(
-                                order = order,
-                                handcraft = find_handcraft,
-                                quantity = quantity,
-                                price = find_handcraft.handcraft_price
-                            )
-                            handcraft_order.append(order_handcraft)
+                            if find_handcraft.handcraft_cost is not None:
+                                order_handcraft = OrderHandcraft.objects.create(
+                                   order = order,
+                                   handcraft = find_handcraft,
+                                  quantity = quantity,
+                                   price = find_handcraft.handcraft_price
+                                )
+                                handcraft_order.append(order_handcraft)
                             # try:
                         #     discont = Discount.objects.first()
                         #     print(discont)
@@ -111,8 +112,11 @@ class OrderForCustomer(APIView):
                         # except Discount.DoesNotExist:
                         #     raise Discount.DoesNotExist('missing discount')    
                         # order.save()
-                            full_price = full_price + (quantity*find_handcraft.handcraft_price)
-                            full_cost = full_cost + (quantity*find_handcraft.handcraft_cost)
+                                full_price = full_price + (quantity*find_handcraft.handcraft_price)
+                                full_cost = full_cost + (quantity*find_handcraft.handcraft_cost)
+                            else:
+                                raise ValueError(f"Handcraft cost for {find_handcraft.id} is not set.")
+
                         order.full_price = full_price
                         order.full_cost = full_cost
                         order.save()
