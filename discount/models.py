@@ -8,8 +8,8 @@ class Discount(models.Model):
     maker = models.ForeignKey(Maker, on_delete = models.CASCADE,blank=True, null=True)
     name = models.CharField(max_length = 50)
     precentage = models.FloatField()
-    from_date = models.CharField(max_length = 50)
-    to_date = models.CharField(max_length = 50)
+    from_date =models.DateField(blank=True, null=True)
+    to_date =  models.TimeField(blank=True, null=True)
     count = models.IntegerField(default=1)
 
 
