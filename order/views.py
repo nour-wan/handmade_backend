@@ -16,7 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 import datetime
 from django.db import transaction
 
-from discount.models import Discount
+from discount.models import Discount, DiscountHandcraft
 
 import logging
 
@@ -91,17 +91,28 @@ class OrderForCustomer(APIView):
 
                             except Handcraft.DoesNotExist:
                                 raise Handcraft.DoesNotExist('missing handcraft')
-                            if find_handcraft.handcraft_price - quantity < 0 :
+                            if find_handcraft.handcraft_count - quantity < 0 :
                                 raise ValueError('the quantity is more than what you have')
 
-                            find_handcraft.handcraft_price = find_handcraft.handcraft_price - quantity
+                            find_handcraft.handcraft_count = find_handcraft.handcraft_count - quantity
                             find_handcraft.save()
+                            
                             if find_handcraft.handcraft_price is not None:
+                                price_discount=find_handcraft.handcraft_price 
+                                find_price_discount=DiscountHandcraft.objects.filter(handcraft=find_handcraft).first()
+                                if find_price_discount : 
+                                    d=Discount.objects.filter(id=find_price_discount.discount)
+                                    print("Discount object")
+                                    print(d)
+                                    print("price_discount")
+                                    print(price_discount)
+                                    price_discount=price_discount * (d.precentage/100)
+                                    print(price_discount)
                                 order_handcraft = OrderHandcraft.objects.create(
                                    order = order,
                                    handcraft = find_handcraft,
                                   quantity = quantity,
-                                   price = find_handcraft.handcraft_price
+                                   price = price_discount
                                 )
                                 handcraft_order.append(order_handcraft)
                             
