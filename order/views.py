@@ -101,12 +101,20 @@ class OrderForCustomer(APIView):
                                 price_discount=find_handcraft.handcraft_price 
                                 find_price_discount=DiscountHandcraft.objects.filter(handcraft=find_handcraft).first()
                                 if find_price_discount : 
-                                    d=Discount.objects.filter(id=find_price_discount.discount)
+                                    try:
+                                        discount = Discount.objects.get(id=find_price_discount.discount.id)
+                                    except Discount.DoesNotExist:
+                                        return Response({
+                                            'message': 'Discount not found',
+                                            'data': {}
+                                        }, status=status.HTTP_404_NOT_FOUND)
+                                    # discount=Discount.objects.get(id=find_price_discount.discount)
                                     print("Discount object")
-                                    print(d)
+                                    print(discount)
                                     print("price_discount")
                                     print(price_discount)
-                                    price_discount=price_discount * (d.precentage/100)
+                                    # price_discount=price_discount * (d.precentage/100)
+                                    price_discount = find_handcraft.handcraft_price * (1 - (discount.precentage / 100))
                                     print(price_discount)
                                 order_handcraft = OrderHandcraft.objects.create(
                                    order = order,
