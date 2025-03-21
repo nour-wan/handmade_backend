@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.shortcuts import render
 from rest_framework.response import Response
 
@@ -114,7 +115,7 @@ class OrderForCustomer(APIView):
                                     print("price_discount")
                                     print(price_discount)
                                     # price_discount=price_discount * (d.precentage/100)
-                                    price_discount = find_handcraft.handcraft_price * (1 - (discount.precentage / 100))
+                                    price_discount = Decimal(find_handcraft.handcraft_price) * (Decimal(1) - Decimal(discount.precentage / 100))
                                     print(price_discount)
                                 order_handcraft = OrderHandcraft.objects.create(
                                    order = order,
