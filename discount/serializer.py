@@ -8,7 +8,7 @@ class DiscountSerializer(serializers.ModelSerializer):
     handcrafts = HandcraftSerializer(many=True, source='discounthandcraft_set')
     class Meta:
         model = Discount
-        fields = '__all__'
+        fields = ['name', 'precentage', 'from_date', 'to_date', 'count']
         
 
 
