@@ -9,7 +9,7 @@ class Discount(models.Model):
     name = models.CharField(max_length = 50)
     precentage = models.FloatField()
     from_date =models.DateField(blank=True, null=True)
-    to_date =  models.TimeField(blank=True, null=True)
+    to_date =  models.DateField(blank=True, null=True)
     count = models.IntegerField(default=1)
 
 
