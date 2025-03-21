@@ -5,7 +5,7 @@ from handcrafts.serializer import HandcraftSerializer
 from .models import Discount, DiscountHandcraft
 
 class DiscountSerializer(serializers.ModelSerializer):
-    handcrafts = HandcraftSerializer(many=True, source='discounthandcraft_set')
+    handcrafts = HandcraftSerializer(many=True, source='discounthandcraft_set',read_only=True)
     class Meta:
         model = Discount
         fields = ['name', 'precentage', 'from_date', 'to_date', 'count', 'handcrafts']
