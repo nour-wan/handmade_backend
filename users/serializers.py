@@ -20,9 +20,9 @@ class PasswordResetRequestSerializer(serializers.Serializer):
         code = generate_verification_code() # Generate a 6-digit code
         user = Users.objects.get(email=email)
         user.reset_code = code  # Assuming you've added `reset_code` field to the User profile
-        damascus_tz = pytz.timezone("Asia/Damascus")
-        now_in_damascus = datetime.datetime.now(damascus_tz)
-        user.code_expiration = (now_in_damascus + datetime.timedelta(minutes=60)).astimezone(pytz.utc)
+        # damascus_tz = pytz.timezone("Asia/Damascus")
+        # now_in_damascus = datetime.datetime.now(damascus_tz)
+        # user.code_expiration = (now_in_damascus + datetime.timedelta(minutes=60)).astimezone(pytz.utc)
 
         # user.code_expiration = datetime.datetime.now(pytz.utc) + datetime.timedelta(minutes=60)
         user.save()  # Save the code to the user's profile
