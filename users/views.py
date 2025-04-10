@@ -41,7 +41,7 @@ class VerifyCodeView(generics.GenericAPIView):
             print(f"Code expiration in DB: {user.code_expiration}")
             print(f"Time difference: {user.code_expiration - now}")
             if (user.reset_code == submitted_code and
-                user.code_expiration >= now.astimezone(pytz.utc)):
+                user.code_expiration >= now):
                 return Response({
                     'message' : 'Code verified. You can now set a new password.',
                     'data' : {}
