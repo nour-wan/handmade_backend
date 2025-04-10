@@ -42,7 +42,7 @@ class VerifyCodeView(generics.GenericAPIView):
             print(f"Submitted code: {submitted_code}")
             print(f"Code expiration in DB: {user.code_expiration}")
             print(f"Time difference: {user.code_expiration - now}")
-            if (user.reset_code == submitted_code ):
+            if (str(user.reset_code).strip() == str(submitted_code).strip() ):
                 return Response({
                     'message' : 'Code verified. You can now set a new password.',
                     'data' : {}
