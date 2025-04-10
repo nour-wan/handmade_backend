@@ -20,7 +20,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
         code = generate_verification_code() # Generate a 6-digit code
         user = Users.objects.get(email=email)
         user.reset_code = code  # Assuming you've added `reset_code` field to the User profile
-        user.code_expiration = datetime.datetime.now(pytz.utc) + datetime.timedelta(minutes=135)
+        user.code_expiration = datetime.datetime.now(pytz.utc) + datetime.timedelta(minutes=60)
         user.save()  # Save the code to the user's profile
         send_verification_email(email,code)
         # send_mail(
