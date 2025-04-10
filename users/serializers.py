@@ -24,7 +24,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
         # now_in_damascus = datetime.datetime.now(damascus_tz)
         # user.code_expiration = (now_in_damascus + datetime.timedelta(minutes=60)).astimezone(pytz.utc)
 
-        # user.code_expiration = datetime.datetime.now(pytz.utc) + datetime.timedelta(minutes=60)
+        user.code_expiration = datetime.datetime.now(pytz.utc) + datetime.timedelta(minutes=60)
         user.save()  # Save the code to the user's profile
         send_verification_email(email,code)
         # send_mail(
