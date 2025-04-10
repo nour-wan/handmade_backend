@@ -34,6 +34,11 @@ class VerifyCodeView(generics.GenericAPIView):
             print("here")
             timezone = pytz.utc
             now =  datetime.datetime.now(timezone)
+            print(f"User code expiration: {user.code_expiration}")
+            print(f"Current time: {now}")
+            print(f"Reset code in DB: {user.reset_code}")
+            print(f"Submitted code: {submitted_code}")
+            print(f"Code expiration in DB: {user.code_expiration}")
             if (user.reset_code == submitted_code and
                 user.code_expiration > now):
                 return Response({
