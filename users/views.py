@@ -36,12 +36,12 @@ class VerifyCodeView(generics.GenericAPIView):
             now =  datetime.datetime.now(timezone)
             # timezone = pytz.timezone("Asia/Damascus")
             # now =  datetime.datetime.now(pytz.utc).astimezone(timezone)
-            print(f"User code expiration: {user.code_expiration}")
-            print(f"Current time: {now}")
-            print(f"Reset code in DB: {user.reset_code}")
-            print(f"Submitted code: {submitted_code}")
-            print(f"Code expiration in DB: {user.code_expiration}")
-            print(f"Time difference: {user.code_expiration - now}")
+            # print(f"User code expiration: {user.code_expiration}")
+            # print(f"Current time: {now}")
+            # print(f"Reset code in DB: {user.reset_code}")
+            # print(f"Submitted code: {submitted_code}")
+            # print(f"Code expiration in DB: {user.code_expiration}")
+            # print(f"Time difference: {user.code_expiration - now}")
             if (str(user.reset_code).strip() == str(submitted_code).strip() and user.code_expiration > now ):
                 return Response({
                     'message' : 'Code verified. You can now set a new password.',
