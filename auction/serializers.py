@@ -4,6 +4,8 @@ from .models import Maker, Handcraft, Auction, MakerAuction, AuctionHandcraft
 
 
 class AuctionSerializer(serializers.ModelSerializer):
+    from_date = serializers.DateTimeField(format="%Y-%m-%d")
+    to_date = serializers.DateTimeField(format="%Y-%m-%d")
     class Meta:
         model = Auction
         fields = '__all__'
