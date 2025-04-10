@@ -39,6 +39,7 @@ class VerifyCodeView(generics.GenericAPIView):
             print(f"Reset code in DB: {user.reset_code}")
             print(f"Submitted code: {submitted_code}")
             print(f"Code expiration in DB: {user.code_expiration}")
+            print(f"Time difference: {user.code_expiration - now}")
             if (user.reset_code == submitted_code and
                 user.code_expiration > now):
                 return Response({
