@@ -103,7 +103,7 @@ class AuctionMakerDetail(APIView):
             response_data = []
 
             for maker in makers:
-                auction_serializer = Auction.objects.get(id=maker.auction_id)
+                # auction_serializer = Auction.objects.get(id=maker.auction_id)
                 maker_serializer =Maker.objects.get(id=maker.maker_id)
                 print("@@@@@@@@@@@@@")
                 print(maker_serializer)
@@ -113,10 +113,10 @@ class AuctionMakerDetail(APIView):
                    MakerSerializer(maker_serializer).data,  # تفاصيل الصانع
                     # 'auction': AuctionSerializer(auction_serializer).data # تفاصيل المزاد
                 )
-                return Response({
-                    'message' : 'Auction makers were get successfully',
-                    'data' : response_data
-                },status=status.HTTP_200_OK)
+            return Response({
+                'message' : 'Auction makers were get successfully',
+                'data' : response_data
+            },status=status.HTTP_200_OK)
             
         except Auction.DoesNotExist:
             return Response({
