@@ -134,7 +134,7 @@ class HandcraftByCategoryList(generics.RetrieveAPIView):
     def get(self, request , pk):
         try:
             handcraft = Handcraft.objects.filter(category_id = pk)
-            serializer = HandcraftSerializer(handcraft,many=True)
+            serializer = HandcraftWithDiscountSerializer(handcraft,many=True)
             return Response({
                 'message' : 'Handcraft was get successfully',
                 'data' :  serializer.data
