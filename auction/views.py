@@ -108,7 +108,7 @@ class AuctionMakerDetail(APIView):
                 print("@@@@@@@@@@@@@")
                 print(maker_serializer)
                 response_data.append({
-                    'id': maker.id,
+                    'id': maker.maker_id ,
                     # 'status': maker.status,
                   'maker_details': MakerSerializer(maker_serializer).data , # تفاصيل الصانع
                     # 'auction': AuctionSerializer(auction_serializer).data # تفاصيل المزاد
