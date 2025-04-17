@@ -2,10 +2,11 @@ from decimal import Decimal
 from rest_framework import serializers
 
 from discount.models import Discount
+from maker.serializer import MakerSerializer
 from .models import Handcraft
 
 class HandcraftSerializer(serializers.ModelSerializer):
-    
+    maker = MakerSerializer()
     class Meta:
         model= Handcraft
         fields = "__all__"
