@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from handmake.utils import CleanedImageURLField
 from users.serializer import UserSerializer
 from .models import  Maker
 from django.contrib.auth import authenticate
@@ -15,7 +16,7 @@ class MakerSerializer(serializers.ModelSerializer):
     
     phone_number = serializers.IntegerField( required=True)
     telegram_id = serializers.CharField( required=True)
-    image = serializers.ImageField()
+    image = CleanedImageURLField()
     username = serializers.CharField(source='user.username', read_only=True)  # إضافة حقل username
     email = serializers.EmailField(source='user.email', read_only=True)  # إضافة حقل email
 

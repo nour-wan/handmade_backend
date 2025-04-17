@@ -1,6 +1,7 @@
 from django.urls import path, include
 
 
+
 from .views import AuctionDetail, AuctionHandcraftCreateView, AuctionList, AuctionMakerDetail,AuctionHandcraftDetail, AuctionPost, MakerAuctionRequestView, ManageMakerAuctionView
 
 urlpatterns = [
@@ -13,7 +14,7 @@ urlpatterns = [
     path('manage-auction-requests', ManageMakerAuctionView.as_view()),
     path('manage-auction-requests/<int:pk>', ManageMakerAuctionView.as_view()),
     path('auction-handcrafts', AuctionHandcraftCreateView.as_view()),
-]
+] 
 # router = DefaultRouter()
 # router.register(r'auctions', AuctionViewSet, basename='auction')
 
