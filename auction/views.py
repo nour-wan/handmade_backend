@@ -107,12 +107,12 @@ class AuctionMakerDetail(APIView):
                 maker_serializer =Maker.objects.get(id=maker.maker_id)
                 print("@@@@@@@@@@@@@")
                 print(maker_serializer)
-                response_data.append(
-                    # 'id': maker.id,
+                response_data.append({
+                    'id': maker.id,
                     # 'status': maker.status,
-                   MakerSerializer(maker_serializer).data,  # تفاصيل الصانع
+                  'maker_details': MakerSerializer(maker_serializer).data , # تفاصيل الصانع
                     # 'auction': AuctionSerializer(auction_serializer).data # تفاصيل المزاد
-                )
+                })
             return Response({
                 'message' : 'Auction makers were get successfully',
                 'data' : response_data
