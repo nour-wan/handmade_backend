@@ -37,11 +37,11 @@ class HandcraftList(generics.RetrieveAPIView):
             Handcraft.objects.filter(id=serializer.instance.id).update(maker_id=maker_id)       
             return Response({
                 'message' : 'Handcraft was added successfully',
-                'data' : {}
+                'data' : serializer.data
             },status=status.HTTP_200_OK)
         return Response({
                 'message' : 'missing fields',
-                'data' : {}
+                'errors': serializer.errors
             },status=status.HTTP_400_BAD_REQUEST)
                
  

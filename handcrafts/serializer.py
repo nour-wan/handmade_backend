@@ -6,10 +6,11 @@ from maker.serializer import MakerSerializer
 from .models import Handcraft
 
 class HandcraftSerializer(serializers.ModelSerializer):
-    maker = MakerSerializer()
+    # maker = MakerSerializer()
     class Meta:
         model= Handcraft
         fields = "__all__"
+        read_only_fields = ['maker']
 
 class DiscounttoHandcraftSerializer(serializers.ModelSerializer):
     class Meta:
