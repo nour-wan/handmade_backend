@@ -34,10 +34,13 @@ class HandcraftList(generics.RetrieveAPIView):
         serializer = HandcraftSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()    
-            Handcraft.objects.filter(id=serializer.instance.id).update(maker_id=maker_id)       
+            Handcraft.objects.filter(id=serializer.instance.id).update(maker_id=maker_id)   
+            category= serializer.instance.category
+            allow_simulation= category.allow_simulation if hasattr(category,'allow_simulation') else False    
             return Response({
                 'message' : 'Handcraft was added successfully',
-                'data' : serializer.data
+                'data' : serializer.data,
+                'allow_simulation' : allow_simulation
             },status=status.HTTP_200_OK)
         return Response({
                 'message' : 'missing fields',
@@ -81,6 +84,13 @@ class HandcraftDetail(generics.RetrieveAPIView):
                 handcraft.handcraft_image = handcraft_image
             if handcraft_count:
                 handcraft.handcraft_count = handcraft_count
+                
+            category = handcraft.category
+            allow_simulation= request.data.get('allow_simulation')
+            if allow_simulation is not None : 
+                if category.allow_simulation != allow_simulation:
+                    category.allow_simulation = allow_simulation    
+                    category.save()
         
             handcraft.save()
             serializer = HandcraftSerializer(handcraft).data
@@ -96,7 +106,7 @@ class HandcraftDetail(generics.RetrieveAPIView):
 
     def delete(self, request, pk):
             return Response({
-                'message' : 'can not delete Handcraft',
+                'message' : 'cannot delete Handcraft',
                 'data' : {}
             },status=status.HTTP_200_OK)
         # try:

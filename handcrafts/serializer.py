@@ -7,6 +7,7 @@ from .models import Handcraft
 
 class HandcraftSerializer(serializers.ModelSerializer):
     maker = MakerSerializer(read_only=True)
+    allow_simulation = serializers.BooleanField(source='category.allow_simulation',read_only=True)
     class Meta:
         model= Handcraft
         fields = "__all__"

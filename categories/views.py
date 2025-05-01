@@ -26,23 +26,42 @@ class CategoryList(generics.RetrieveAPIView):
             },status=status.HTTP_200_OK)
     
     def post(self,request):
-        category_name = request.data.get("category_name")
-        if Category.objects.filter(category_name=category_name) :
+        try:
+            category_name = request.data.get("category_name")
+            category_description = request.data.get("category_description")
+            category_image= request.data.get("category_image")
+            allow_simulation=request.data.get('allow_simulation')
+            if allow_simulation not in [True,False]:
+                return Response({
+                    'message' : 'allow_simulation must be a boolean value (True,False)',
+                    'data' : []
+                },status=status.HTTP_400_BAD_REQUEST)
+            if Category.objects.filter(category_name=category_name) :
+                return Response({
+                    'message' : 'Category is already exist',
+                    'data' : []
+                },status=status.HTTP_400_BAD_REQUEST)
+            
+            Category=Category.object.create(
+                category_name=category_name,
+                category_description=category_description,
+                category_image=category_image,
+            allow_simulation= allow_simulation
+                
+            )    
+            serializer = CategorySerializer(Category).data
+
+            if serializer.is_valid():
+                # serializer.save()           
+                return Response({
+                    'message' : 'Category was added successfully',
+                    'data' :serializer
+                },status=status.HTTP_200_OK)
+        except Exception as e :        
             return Response({
-                'message' : 'Category is already exist',
-                'data' : []
-            },status=status.HTTP_400_BAD_REQUEST)
-        serializer = CategorySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()           
-            return Response({
-                'message' : 'Category was added successfully',
-                'data' : {}
-            },status=status.HTTP_200_OK)
-        return Response({
-                'message' : 'missing fields',
-                'data' : {}
-            },status=status.HTTP_400_BAD_REQUEST)
+                    'message' : str(e),
+                    'data' : {}
+                },status=status.HTTP_400_BAD_REQUEST)
                
  
           
@@ -71,6 +90,7 @@ class CategoryDetail(APIView):
             category_name = request.data.get('category_name')
             category_description = request.data.get('category_description')
             categorye_image  = request.FILES.get('categorye_image')
+            allow_simulation = request.data.get('allow_simulation')
 
             if category_name:
                 category.category_name = category_name
@@ -78,6 +98,8 @@ class CategoryDetail(APIView):
                 category.category_description = category_description
             if categorye_image:
                 category.categorye_image = categorye_image
+            if allow_simulation is not None:
+                category.allow_simulation = allow_simulation    
 
             category.save()
             serializer = CategorySerializer(category).data
