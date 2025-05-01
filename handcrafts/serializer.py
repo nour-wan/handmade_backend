@@ -6,7 +6,7 @@ from maker.serializer import MakerSerializer
 from .models import Handcraft
 
 class HandcraftSerializer(serializers.ModelSerializer):
-    # maker = MakerSerializer()
+    maker = MakerSerializer(read_only=True)
     class Meta:
         model= Handcraft
         fields = "__all__"
