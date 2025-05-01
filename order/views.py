@@ -59,6 +59,12 @@ class OrderForCustomer(APIView):
                     'message' : 'missing fields',
                     'data' : {}
                 },status=status.HTTP_404_NOT_FOUND)
+            location = request.data.get('location')
+            if not location:
+                return Response({
+                    'message': 'Location is required',
+                    'data': {}
+                }, status=status.HTTP_400_BAD_REQUEST)    
 
             try:
                 customer1 = Customer.objects.get(id = customer_id)
@@ -78,6 +84,9 @@ class OrderForCustomer(APIView):
                     if customer_phone:
                         order.customer_phone = customer_phone
                         order.save()
+                    if location:
+                        order.location = location
+                        order.save()    
                     handcraft_order = []
 
 
