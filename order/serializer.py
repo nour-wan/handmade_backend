@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import Order, OrderHandcraft
 from handcrafts.models import Handcraft
 from handcrafts.serializer import HandcraftSerializer
+
+
 class OrderHandcraftSerializer(serializers.ModelSerializer):
     handcraft = HandcraftSerializer()
     class Meta:
@@ -16,7 +18,7 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['id', 'full_price',
                   'date_of_order', 'time_of_order', 
-                  'delivery', 'customer_phone',     
+                  'delivery', 'customer_phone', 'location',    
                   'customer', 'orderhandcrafts'] 
         def to_representation(self, instance):
             representation = super().to_representation(instance)
