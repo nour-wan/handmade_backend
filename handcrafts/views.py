@@ -131,6 +131,12 @@ class AllHandcraftList(generics.RetrieveAPIView):
         handcraft=Handcraft.objects.all()
         serializer = HandcraftWithDiscountSerializer(handcraft,many=True)
         # print(categories)
+        data_with_simulation = []
+        for item in serializer.data:
+            handcraft_obj = handcraft.get(id=item['id'])
+            allow_simulation = handcraft_obj.category.allow_simulation if hasattr(handcraft_obj.category, 'allow_simulation') else False
+            item['allow_simulation'] = allow_simulation
+            data_with_simulation.append(item)
         return Response({
             'message' : 'handcraft get successfully',
             "data":serializer.data
@@ -145,6 +151,12 @@ class HandcraftByCategoryList(generics.RetrieveAPIView):
         try:
             handcraft = Handcraft.objects.filter(category_id = pk)
             serializer = HandcraftWithDiscountSerializer(handcraft,many=True)
+            data_with_simulation = []
+            for item in serializer.data:
+                handcraft_obj = handcraft.get(id=item['id'])
+                allow_simulation = handcraft_obj.category.allow_simulation if hasattr(handcraft_obj.category, 'allow_simulation') else False
+                item['allow_simulation'] = allow_simulation
+                data_with_simulation.append(item)
             return Response({
                 'message' : 'Handcraft was get successfully',
                 'data' :  serializer.data
