@@ -24,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=!r%5bsqsk2i^*@o2i^_-kro9qasxa^p85bldo3%0hzud0%=*z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False #True
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'comment',
     'discount',
     'order',
-    # 'ml_model',
+    'ml_model',
     'auction',
 ]
 
@@ -90,35 +90,26 @@ WSGI_APPLICATION = 'handmake.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 
+
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get("MYSQL_DATABASE"),
-        'USER': os.environ.get("MYSQLUSER"),
-        'PASSWORD': os.environ.get("MYSQLPASSWORD"),
-        'HOST': os.environ.get("MYSQLHOST"),
-        'PORT': os.environ.get("MYSQLPORT", "3306"),
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        # 'NAME': 'handmake_db',
+        # 'USER': 'root',
+        # 'PASSWORD': '',
+        'NAME': 'handmake_db',
+        'USER': 'handmade_user',
+        'PASSWORD': 'mysql1234',
+        'HOST': 'localhost',
+        'PORT': '3306',  
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         # 'NAME': BASE_DIR / 'db.sqlite3',
-#         # 'NAME': 'handmake_db',
-#         # 'USER': 'root',
-#         # 'PASSWORD': '',
-#         'NAME': 'handmake_db',
-#         'USER': 'handmade_user',
-#         'PASSWORD': 'mysql1234',
-#         'HOST': 'localhost',
-#         'PORT': '3306',  
-#         'OPTIONS': {
-#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-#         },
-#     }
-# }
 
 AUTH_USER_MODEL = "users.Users" 
 
