@@ -1,1 +1,1 @@
-web: gunicorn handmake.wsgi
+web: gunicorn handmake.wsgi:application
