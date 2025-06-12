@@ -67,7 +67,7 @@ jupyterlab_server==2.27.3
 kiwisolver==1.4.7
 lazy_loader==0.4
 Markdown==3.7
-markdown-it-py==3.0.2
+markdown-it-py
 MarkupSafe==3.0.1
 matplotlib-inline==0.1.7
 mdurl==0.1.2
