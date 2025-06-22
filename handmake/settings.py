@@ -100,7 +100,7 @@ DATABASES = {
         # 'NAME': 'handmake_db',
         # 'USER': 'root',
         # 'PASSWORD': '',
-        'NAME': 'handmake_db',
+        'NAME': 'handmade_db',
         'USER': 'handmade_user',
         'PASSWORD': 'mysql1234',
         'HOST': 'localhost',
