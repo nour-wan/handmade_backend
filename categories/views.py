@@ -31,7 +31,7 @@ class CategoryList(generics.RetrieveAPIView):
             category_description = request.data.get("category_description")
             category_image= request.data.get("category_image")
             allow_simulation=request.data.get("allow_simulation")
-            if allow_simulation not in [True,False]:
+            if allow_simulation not in [True,False, 'true', 'false', 'True', 'False']:
                 return Response({
                     'message' : 'allow_simulation must be a boolean value (True,False)',
                     'data' : []
