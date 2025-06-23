@@ -71,15 +71,13 @@ class LoginView(ObtainAuthToken):
     
     
 class LogoutView(APIView):
-    authentication_classes = [TokenAuthentication] # تأكد من وجود هذا
+    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
     def post(self, request, format=None):
-        if request.auth: # تحقق مما إذا كان هناك رمز توثيق قبل حذفه
+        if request.auth: 
             request.auth.delete()
         else:
-            # إذا لم يكن هناك رمز توثيق، قد ترغب في التعامل مع هذا بطريقة مختلفة
-            # على سبيل المثال، إرجاع رسالة بأن المستخدم غير مسجل الدخول أصلاً
             return Response({"message": "User is not logged in."}, status=status.HTTP_400_BAD_REQUEST)
 
         response_data = {
