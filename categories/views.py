@@ -36,32 +36,33 @@ class CategoryList(generics.RetrieveAPIView):
                     'message' : 'allow_simulation must be a boolean value (True,False)',
                     'data' : []
                 },status=status.HTTP_400_BAD_REQUEST)
-            if Category.objects.filter(category_name=category_name) :
+            if isinstance(allow_simulation, str):
+                allow_simulation = allow_simulation.lower() == 'true'
+
+            if Category.objects.filter(category_name=category_name).exists():
                 return Response({
-                    'message' : 'Category is already exist',
-                    'data' : []
-                },status=status.HTTP_400_BAD_REQUEST)
-            
-            Category=Category.object.create(
+                    'message': 'Category already exists',
+                    'data': []
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            category = Category.objects.create(
                 category_name=category_name,
                 category_description=category_description,
                 category_image=category_image,
-            allow_simulation= allow_simulation
-                
-            )    
-            serializer = CategorySerializer(Category).data
+                allow_simulation=allow_simulation
+            )
 
-            if serializer.is_valid():
-                # serializer.save()           
-                return Response({
-                    'message' : 'Category was added successfully',
-                    'data' :serializer
-                },status=status.HTTP_200_OK)
-        except Exception as e :        
+            serializer = CategorySerializer(category)
             return Response({
-                    'message' : str(e),
-                    'data' : {}
-                },status=status.HTTP_400_BAD_REQUEST)
+                'message': 'Category was added successfully',
+                'data': serializer.data
+            }, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({
+                'message': str(e),
+                'data': {}
+            }, status=status.HTTP_400_BAD_REQUEST)
                
  
           
