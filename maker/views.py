@@ -19,6 +19,7 @@ from rest_framework import generics ,permissions
 from users.serializer import UserSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from users.permissions import IsMakerUser
+from rest_framework.authentication import TokenAuthentication # أو أي نوع مصادقة آخر تستخدمه
 
 # Create your views here.
 class RegisterView(generics.GenericAPIView):
@@ -70,22 +71,48 @@ class LoginView(ObtainAuthToken):
     
     
 class LogoutView(APIView):
-    def post(self, request , format=None):
-        request.auth.delete()
+    authentication_classes = [TokenAuthentication] # تأكد من وجود هذا
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request, format=None):
+        if request.auth: # تحقق مما إذا كان هناك رمز توثيق قبل حذفه
+            request.auth.delete()
+        else:
+            # إذا لم يكن هناك رمز توثيق، قد ترغب في التعامل مع هذا بطريقة مختلفة
+            # على سبيل المثال، إرجاع رسالة بأن المستخدم غير مسجل الدخول أصلاً
+            return Response({"message": "User is not logged in."}, status=status.HTTP_400_BAD_REQUEST)
+
         response_data = {
-            "user_id":"" ,
+            "user_id": "",
             "admin_id": "",
             "username": "",
-            "email":"" ,
-            "phone_number":"" ,
+            "email": "",
+            "phone_number": "",
             "telegram_id": "",
             "image": "",
         }
         return Response({
-            "user" : response_data,
+            "user": response_data,
             "token": "",
-            "message":"account logout successfully"
-        },status=status.HTTP_200_OK)
+            "message": "account logout successfully"
+        }, status=status.HTTP_200_OK)
+    # #########333
+    # def post(self, request , format=None):
+    #     request.auth.delete()
+    #     response_data = {
+    #         "user_id":"" ,
+    #         "admin_id": "",
+    #         "username": "",
+    #         "email":"" ,
+    #         "phone_number":"" ,
+    #         "telegram_id": "",
+    #         "image": "",
+    #     }
+    #     return Response({
+    #         "user" : response_data,
+    #         "token": "",
+    #         "message":"account logout successfully"
+    #     },status=status.HTTP_200_OK)
     
  
 
