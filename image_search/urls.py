@@ -12,5 +12,5 @@ urlpatterns = [
     # ملاحظة: إذا كنت تعتمد فقط على الصور الموجودة في MEDIA_ROOT،
     # فقد لا تحتاج إلى هذه الـ View الخاصة بالرفع.
     # ولكن إذا أردت وظيفة لرفع صور جديدة إلى MEDIA_ROOT عبر Django، فستحتاجها.
-    path('upload/', views.upload_image_view, name='upload_image'),
+    # path('upload/', views.upload_image_view, name='upload_image'),
 ]
