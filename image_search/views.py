@@ -65,8 +65,10 @@ def search_view(request):
             # معالجة البحث بالصور
             if image_file:
                 try:
-                    # PIL Image.open يمكنها قراءة من File object مباشرة
                     image = Image.open(image_file).convert("RGB")
+        # بدلاً من استدعاء search_similar_images مباشرة هنا، يمكنك تمرير الـ embedding
+        # أو تعديل search_similar_images لتقبل كائن PIL.Image
+        # لنفترض أن search_similar_images تتوقع PIL Image الآن
                     image_results = search_similar_images(query_image=image, top_k=4)
                     results.extend(image_results)
                 except Exception as e:

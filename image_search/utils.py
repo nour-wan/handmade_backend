@@ -41,6 +41,11 @@ def get_sentence_transformer_model():
         print("تم تحميل النموذج.")
     return _model
 
+def get_embedding_for_text(text: str):
+    model = get_sentence_transformer_model()
+    embedding = model.encode(text, convert_to_tensor=True).cpu().numpy()
+    return embedding.flatten() # يجب أن يكون متجه أحادي الأبعاد
+
 def _get_embedding_for_image(image_path):
     """
     دالة مساعدة لاستخراج المتجه من مسار الصورة.
@@ -51,8 +56,8 @@ def _get_embedding_for_image(image_path):
         return None
     try:
         image = Image.open(image_path).convert("RGB")
-        embedding = model.encode(image)
-        return embedding
+        embedding = model.encode(image, convert_to_tensor=True).cpu().numpy()
+        return embedding.flatten()
     except Exception as e:
         print(f"خطأ في معالجة الصورة {image_path}: {e}")
         return None
