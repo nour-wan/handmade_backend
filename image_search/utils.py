@@ -247,46 +247,86 @@ def product_post_delete_handler(sender, instance, **kwargs):
     # أو يمكننا عمل "soft delete" بحيث لا يظهر في نتائج البحث ولكن يبقى في الفهرس مؤقتًا.
     # save_faiss_index() # إذا تم تنفيذ إزالة
 
-
-def search_similar_images(query_input, top_k=4, threshold=150):
-    """
-    وظيفة البحث الرئيسية المستخدمة في الـ View.
-    تقبل استعلام نصي أو صورة.
-    """
-    model = get_sentence_transformer_model()
-    init_faiss_index() # تأكد من تهيئة الفهرس
-
-    if _faiss_index is None or _faiss_index.ntotal == 0:
-        return {"error": "فهرس البحث غير جاهز أو فارغ."}, []
+def search_similar_images(query_text=None, query_image=None, top_k=5): # <--- MODIFIED LINE
+    global _faiss_index, _product_ids
+    if _faiss_index is None:
+        print("الفهرس غير مهيأ. لا يمكن إجراء البحث.")
+        return []
 
     query_embedding = None
-    if isinstance(query_input, Image.Image):
-        query_input = query_input.convert("RGB")
-        query_embedding = model.encode(query_input)
-    elif isinstance(query_input, str) and query_input.strip():
-        query_embedding = model.encode(query_input)
-    else:
-        return {"error": "يرجى تقديم صورة أو نص للاستعلام."}, []
+    if query_text:
+        query_embedding = get_embedding_for_text(query_text)
+    elif query_image: # Now it will correctly use query_image
+        query_embedding = _get_embedding_for_image(query_image) # Make sure this calls the right image embedding function
 
-    D, I = _faiss_index.search(np.array([query_embedding]), k=top_k)
+    if query_embedding is None:
+        return []
+
+    # FAISS expects a 2D array (batch_size, vector_dim)
+    query_embedding = np.array([query_embedding]).astype('float32')
+
+    # البحث في الفهرس
+    distances, indices = _faiss_index.search(query_embedding, top_k)
 
     results = []
-    # I[0] الآن يحتوي على Product IDs مباشرة (إذا استخدمت IndexIDMap بشكل صحيح)
-    for i, product_id in enumerate(I[0]):
-        distance = D[0][i]
-        if distance < threshold:
+    for i in indices[0]:
+        if 0 <= i < len(_product_ids):
+            product_id = _product_ids[i]
             try:
-                # استرجاع كائن Product من قاعدة البيانات باستخدام Product ID
+                # Make sure you import Handcraft at the top of utils.py if not already
+                from handcrafts.models import Handcraft # <--- Add this import if missing
                 product = Handcraft.objects.get(id=product_id)
                 results.append({
-                    'product_id': product.id,
-                    'name': product.handcraft_name,
-                    'image_url': product.handcraft_image.url,
-                    'distance': float(distance)
+                    'id': product.id,
+                    'name': product.name,
+                    'description': product.description,
+                    'image_url': product.handcraft_image.url if product.handcraft_image else None
                 })
             except Handcraft.DoesNotExist:
-                print(f"تحذير: المنتج ID {product_id} لم يعد موجوداً في قاعدة البيانات.")
-                # هذا يحدث إذا تم حذف منتج ولم يتم إعادة بناء الفهرس
+                print(f"تحذير: المنتج ذو المعرف {product_id} غير موجود في قاعدة البيانات.")
                 continue
+    return results
 
-    return {"results": results, "query_embedding": query_embedding.tolist()}, results
+# ... (rest of
+# def search_similar_images(query_input, top_k=4, threshold=150):
+    # """
+    # وظيفة البحث الرئيسية المستخدمة في الـ View.
+    # تقبل استعلام نصي أو صورة.
+    # """
+    # model = get_sentence_transformer_model()
+    # init_faiss_index() # تأكد من تهيئة الفهرس
+
+    # if _faiss_index is None or _faiss_index.ntotal == 0:
+    #     return {"error": "فهرس البحث غير جاهز أو فارغ."}, []
+
+    # query_embedding = None
+    # if isinstance(query_input, Image.Image):
+    #     query_input = query_input.convert("RGB")
+    #     query_embedding = model.encode(query_input)
+    # elif isinstance(query_input, str) and query_input.strip():
+    #     query_embedding = model.encode(query_input)
+    # else:
+    #     return {"error": "يرجى تقديم صورة أو نص للاستعلام."}, []
+
+    # D, I = _faiss_index.search(np.array([query_embedding]), k=top_k)
+
+    # results = []
+    # # I[0] الآن يحتوي على Product IDs مباشرة (إذا استخدمت IndexIDMap بشكل صحيح)
+    # for i, product_id in enumerate(I[0]):
+    #     distance = D[0][i]
+    #     if distance < threshold:
+    #         try:
+    #             # استرجاع كائن Product من قاعدة البيانات باستخدام Product ID
+    #             product = Handcraft.objects.get(id=product_id)
+    #             results.append({
+    #                 'product_id': product.id,
+    #                 'name': product.handcraft_name,
+    #                 'image_url': product.handcraft_image.url,
+    #                 'distance': float(distance)
+    #             })
+    #         except Handcraft.DoesNotExist:
+    #             print(f"تحذير: المنتج ID {product_id} لم يعد موجوداً في قاعدة البيانات.")
+    #             # هذا يحدث إذا تم حذف منتج ولم يتم إعادة بناء الفهرس
+    #             continue
+
+    # return {"results": results, "query_embedding": query_embedding.tolist()}, results
