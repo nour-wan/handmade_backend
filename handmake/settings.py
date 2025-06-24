@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'order',
     'ml_model',
     'auction',
+    'image_search',
 ]
 
 MIDDLEWARE = [
