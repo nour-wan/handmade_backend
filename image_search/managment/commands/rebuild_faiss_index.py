@@ -70,3 +70,4 @@ class Command(BaseCommand):
         faiss_utils._faiss_index = None # <-- تم التعديل هنا
         faiss_utils._id_to_product_map = {} # <-- تم التعديل هنا
         faiss_utils._product_to_id_map = {} # <-- تم التعديل هنا
+        
