@@ -36,7 +36,8 @@ def get_sentence_transformer_model():
     global _model
     if _model is None:
         print("تحميل نموذج CLIP-ViT-B-32...")
-        _model = SentenceTransformer('clip-ViT-B-32')
+        # تم تغيير النموذج للعمل على السيرفر
+        _model = SentenceTransformer('all-MiniLM-L6-v2')
         print("تم تحميل النموذج.")
     return _model
 
