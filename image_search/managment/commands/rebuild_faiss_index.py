@@ -24,9 +24,9 @@ class Command(BaseCommand):
         product_ids_list = []
 
         for product in all_products:
-            if not product.image:
+            if not product.handcraft_image:
                 continue
-            image_path = product.image.path
+            image_path = product.handcraft_image.path
             if not os.path.exists(image_path):
                 self.stdout.write(self.style.WARNING(f"تحذير: صورة المنتج {product.id} غير موجودة: {image_path}"))
                 continue

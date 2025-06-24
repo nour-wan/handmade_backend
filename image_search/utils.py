@@ -119,10 +119,10 @@ def init_faiss_index():
     product_ids_list = [] # لربط فهرس FAISS بـ Product ID
 
     for product in all_products:
-        if not product.image: # تخطي المنتجات بدون صور
+        if not product.handcraft_image: # تخطي المنتجات بدون صور
             continue
 
-        embedding = _get_embedding_for_image(product.image_path)
+        embedding = _get_embedding_for_image(product.handcraft_image.path)
         if embedding is not None:
             embeddings_list.append(embedding)
             product_ids_list.append(product.id) # إضافة Product ID
@@ -274,8 +274,8 @@ def search_similar_images(query_input, top_k=4, threshold=150):
                 product = Handcraft.objects.get(id=product_id)
                 results.append({
                     'product_id': product.id,
-                    'name': product.name,
-                    'image_url': product.image_url,
+                    'name': product.handcraft_name,
+                    'image_url': product.handcraft_image.url,
                     'distance': float(distance)
                 })
             except Handcraft.DoesNotExist:
