@@ -34,5 +34,5 @@ urlpatterns = [
     path('order/',include('order.urls')),
     path('ml_model/', include('ml_model.urls')),
     path('auctions/', include('auction.urls')),
-    path('search/', include('image_search.urls')),
+    # path('search/', include('image_search.urls')),
 ]+ static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)
