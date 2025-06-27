@@ -90,15 +90,15 @@ class CategoryDetail(APIView):
             category = Category.objects.get(id = pk)
             category_name = request.data.get('category_name')
             category_description = request.data.get('category_description')
-            categorye_image  = request.FILES.get('categorye_image')
+            category_image  = request.FILES.get('category_image')
             allow_simulation = request.data.get('allow_simulation')
 
             if category_name:
                 category.category_name = category_name
             if category_description:
                 category.category_description = category_description
-            if categorye_image:
-                category.categorye_image = categorye_image
+            if category_image:
+                category.category_image = category_image
             if allow_simulation is not None:
                 category.allow_simulation = allow_simulation    
 
