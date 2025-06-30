@@ -33,8 +33,8 @@ class HandcraftList(generics.RetrieveAPIView):
         maker_id = maker.id
         serializer = HandcraftSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()    
-            Handcraft.objects.filter(id=serializer.instance.id).update(maker_id=maker_id)   
+            serializer.save(maker=maker)    
+            # Handcraft.objects.filter(id=serializer.instance.id).update(maker_id=maker_id)   
             category= serializer.instance.category
             allow_simulation= category.allow_simulation if hasattr(category,'allow_simulation') else False    
             return Response({
