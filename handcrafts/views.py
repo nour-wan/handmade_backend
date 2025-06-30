@@ -69,13 +69,18 @@ class HandcraftDetail(generics.RetrieveAPIView):
             
     def put(self, request, pk):
         try:
+            user = request.user
+            maker = None
+            if hasattr(user, 'maker'): 
+                maker = user.maker
             print(request.data)
             handcraft = Handcraft.objects.get(id = pk)
             handcraft_name = request.data.get('handcraft_name')
             handcraft_price = request.data.get('handcraft_price')
             handcraft_image  = request.FILES.get('handcraft_image')
             handcraft_count = request.data.get('handcraft_count')
-
+            if handcraft.maker is None and maker:
+                handcraft.maker = maker
             if handcraft_name:
                 handcraft.handcraft_name = handcraft_name
             if handcraft_price:
@@ -102,7 +107,12 @@ class HandcraftDetail(generics.RetrieveAPIView):
             return Response({
                 'message' : 'Handcraft not be found',
                 'data' : {}
-            },status=status.HTTP_404_NOT_FOUND)       
+            },status=status.HTTP_404_NOT_FOUND)
+        except Exception as e: # إضافة معالجة عامة للأخطاء
+            return Response({
+                'message': str(e),
+                'data': {}
+            }, status=status.HTTP_400_BAD_REQUEST)           
 
     def delete(self, request, pk):
             return Response({
