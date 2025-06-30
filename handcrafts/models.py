@@ -9,7 +9,7 @@ class Handcraft(models.Model):
     handcraft_price=models.DecimalField(max_digits=10, decimal_places=2)
     handcraft_count=models.IntegerField()
     handcraft_image=models.ImageField(upload_to= 'handcraft_images/')
-    category = models.ForeignKey(Category, on_delete = models.PROTECT)  
+    category = models.ForeignKey(Category, on_delete = models.CASCADE)  
     maker = models.ForeignKey(Maker, on_delete = models.PROTECT,null= True , blank=True)  
     is_indexed = models.BooleanField(default=False,null= True , blank=True)
     # handcraft_cost=models.DecimalField(max_digits=10, decimal_places=2,null= True , blank=True)

@@ -114,20 +114,25 @@ class CategoryDetail(APIView):
                 'data' : {}
             },status=status.HTTP_404_NOT_FOUND)       
 
-    # def delete(request,category,pk):
-    #     try:
-    #         category = Category.objects.get(id = pk)
-    #         category.delete()
-    #         return Response({
-    #             'message' : 'category was deleted successfully',
-    #             'data' : {}
-    #         },status=status.HTTP_200_OK)
-    #     except Category.DoesNotExist:
-    #         return Response({
-    #             'message' : 'subject not be found',
-    #             'data' : {}
-    #         },status=status.HTTP_404_NOT_FOUND)
-            
+    def delete(self, request, pk):
+        try:
+            category = Category.objects.get(id=pk)
+           
+            category.delete()
+            return Response({
+                'message': 'Category was deleted successfully',
+                'data': {}
+            }, status=status.HTTP_200_OK)
+        except Category.DoesNotExist:
+            return Response({
+                'message': 'Category not found',
+                'data': {}
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'message': str(e),
+                'data': {}
+            }, status=status.HTTP_400_BAD_REQUEST)
             
                      
            
