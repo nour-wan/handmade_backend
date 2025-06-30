@@ -115,23 +115,32 @@ class HandcraftDetail(generics.RetrieveAPIView):
             }, status=status.HTTP_400_BAD_REQUEST)           
 
     def delete(self, request, pk):
-            return Response({
-                'message' : 'cannot delete Handcraft',
-                'data' : {}
-            },status=status.HTTP_200_OK)
-        # try:
-        #     handcraft = Handcraft.objects.get(id = pk)
-        #     handcraft.delete()
-        #     return Response({
-        #         'message' : 'Handcraft was deleted successfully',
-        #         'data' : {}
-        #     },status=status.HTTP_200_OK)
-        # except Handcraft.DoesNotExist:
-        #     return Response({
-        #         'message' : 'Handcraft not be found',
-        #         'data' : {}
-        #     },status=status.HTTP_404_NOT_FOUND)
+        try:
+            handcraft = Handcraft.objects.get(id=pk)
             
+            # التأكد من أن الـ maker الذي يحاول الحذف هو مالك المنتج
+            user = request.user
+            if not hasattr(user, 'maker') or handcraft.maker != user.maker:
+                return Response({
+                    'message': 'You do not have permission to delete this handcraft.',
+                    'data': {}
+                }, status=status.HTTP_403_FORBIDDEN)
+
+            handcraft.delete()
+            return Response({
+                'message': 'Handcraft was deleted successfully',
+                'data': {}
+            }, status=status.HTTP_200_OK)
+        except Handcraft.DoesNotExist:
+            return Response({
+                'message': 'Handcraft not found',
+                'data': {}
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e: # إضافة معالجة عامة للأخطاء
+            return Response({
+                'message': str(e),
+                'data': {}
+            }, status=status.HTTP_400_BAD_REQUEST)
     
 class AllHandcraftList(generics.RetrieveAPIView):   
     permission_classes = [permissions.IsAuthenticated&IsAllUser]
