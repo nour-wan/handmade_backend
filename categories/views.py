@@ -29,7 +29,7 @@ class CategoryList(generics.RetrieveAPIView):
         try:
             category_name = request.data.get("category_name")
             category_description = request.data.get("category_description")
-            category_image= request.data.get("category_image")
+            category_image= request.FILES.get("category_image")
             allow_simulation=request.data.get("allow_simulation")
             if allow_simulation not in [True,False, 'true', 'false', 'True', 'False']:
                 return Response({
