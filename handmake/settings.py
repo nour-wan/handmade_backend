@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'ml_model',
     'auction',
     # 'image_search',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
