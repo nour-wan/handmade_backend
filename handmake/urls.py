@@ -34,5 +34,6 @@ urlpatterns = [
     path('order/',include('order.urls')),
     path('ml_model/', include('ml_model.urls')),
     path('auctions/', include('auction.urls')),
+    path('vase_table_sim/', include('vase_table_sim.urls')),
     # path('search/', include('image_search.urls')),
 ]+ static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)

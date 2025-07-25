@@ -35,10 +35,10 @@ def get_sentence_transformer_model():
     """يحمل نموذج SentenceTransformer مرة واحدة."""
     global _model
     if _model is None:
-        # print("تحميل نموذج CLIP-ViT-B-32...")
-        print("تحميل نموذج all-MiniLM-L6-v2...")
+        print("تحميل نموذج CLIP-ViT-B-32...")
+        # print("تحميل نموذج all-MiniLM-L6-v2...")
         # تم تغيير النموذج للعمل على السيرفر
-        _model = SentenceTransformer('all-MiniLM-L6-v2')
+        _model = SentenceTransformer('CLIP-ViT-B-32')
         print("تم تحميل النموذج.")
     return _model
 

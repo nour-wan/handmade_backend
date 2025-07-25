@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'auction',
     # 'image_search',
     'django_extensions',
+    'vase_table_sim',
 ]
 
 MIDDLEWARE = [
