@@ -8,7 +8,7 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from PIL import Image
-
+import cv2
 # استيراد التوابع من ملف ai_functions.py في نفس الـ App
 from .ai_functions import load_yolo_model, remove_background_from_image, add_vase_to_table
 
