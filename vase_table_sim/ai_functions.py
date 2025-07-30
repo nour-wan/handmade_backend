@@ -76,14 +76,14 @@ def add_vase_to_table(table_image_path, vase_image_no_bg_pil_image, yolo_model):
     vase_cropped = vase[top:bottom, :, :]
 
     # إعادة تحجيم الفازة لتناسب حجم الطاولة
-    new_width = width // 3
+    new_width = width // 2
     scale_ratio = new_width / vase_cropped.shape[1]
     new_height = int(vase_cropped.shape[0] * scale_ratio)
     vase_resized = cv2.resize(vase_cropped, (new_width, new_height))
 
     # تحديد مكان الفازة بحيث قاعدتها تلامس سطح الطاولة
     x = int(x_center - new_width / 2)
-    y = int(y_center + height / 2 - vase_resized.shape[0] - 10)
+    y = int(y_center + height / 2 )- vase_resized.shape[0] +20
 
     # تأكد أن الفازة ضمن حدود الصورة
     if y < 0: y = 0
