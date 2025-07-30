@@ -45,6 +45,8 @@ def simulate_table_vase(request):
     if not yolo_model_instance:
         return JsonResponse({"error": "YOLO model failed to load. Please check server logs."}, status=503) # Service Unavailable
 
+    
+
     try:
         table_image_file = request.FILES.get('table_image')
         vase_image_file = request.FILES.get('vase_image')
@@ -52,34 +54,46 @@ def simulate_table_vase(request):
         if not table_image_file or not vase_image_file:
             return JsonResponse({"error": "يجب رفع صورتين (طاولة وفازة)."}, status=400)
 
+        # 1. قراءة بايتات الملفات مباشرة من كائنات UploadedFile
+        # هذه هي الطريقة الأفضل لتجنب المشاكل مع الملفات المؤقتة إذا لم تكن ضرورية
+        table_image_bytes = table_image_file.read()
+        vase_image_bytes = vase_image_file.read()
+
+        # 2. إزالة خلفية الفازة مباشرة من البايتات
+        vase_no_bg_pil_image = remove_background_from_image(vase_image_bytes)
+
+        # 3. لحفظ صورة الطاولة مؤقتًا ليتمكن OpenCV من قراءتها من المسار
+        # يجب إنشاء ملف مؤقت جديد هنا وتمرير مساره
         with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_table:
-            temp_table.write(table_image_file.read())
+            temp_table.write(table_image_bytes)
             temp_table_path = temp_table.name
 
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_vase:
-            temp_vase.write(vase_image_file.read())
-            temp_vase_path = temp_vase.name
-
         try:
-            temp_vase.seek(0)
-            vase_no_bg_pil_image = remove_background_from_image(temp_vase.read())
-
+            # 4. دمج الفازة على الطاولة
+            # نمرر المسار للصور المؤقتة وليس الكائن
             final_image_cv2 = add_vase_to_table(temp_table_path, vase_no_bg_pil_image, yolo_model_instance)
 
             if final_image_cv2 is None:
                 return JsonResponse({"error": "تعذر إنشاء الصورة النهائية للمحاكاة."}, status=500)
 
+            # 5. حفظ الصورة النهائية المولدة
             final_image_filename = f"table_with_vase_{int(time.time())}.png"
             final_image_path = os.path.join(GENERATED_IMAGES_PATH, final_image_filename)
             cv2.imwrite(final_image_path, final_image_cv2)
 
+            # 6. توليد رابط URL للصورة
             final_image_url = f"{settings.MEDIA_URL}generated/{final_image_filename}"
 
             return JsonResponse({"image_url": final_image_url})
 
         finally:
-            os.unlink(temp_table_path)
-            os.unlink(temp_vase_path)
+            # التأكد من حذف الملف المؤقت بعد الانتهاء
+            os.unlink(temp_table_path) # حذف ملف الطاولة المؤقت
+            # لم نعد نستخدم temp_vase كملف مؤقت على القرص بنفس الطريقة
+            # vase_image_file و table_image_file يتم إغلاقهم تلقائياً بواسطة Django
+            # و vase_image_bytes لا تحتاج لحذف
+            # التأكد من عدم وجود os.unlink(temp_vase_path) قديم هنا
+            pass # لا شيء نحذفه هنا إذا لم ننشئ temp_vase_path
 
     except ValueError as ve:
         return JsonResponse({"error": str(ve)}, status=400)
@@ -87,5 +101,3 @@ def simulate_table_vase(request):
         import traceback
         print(f"An unexpected error occurred in simulate_table_vase: {traceback.format_exc()}")
         return JsonResponse({"error": "An unexpected server error occurred.", "details": str(e)}, status=500)
-    
-    
