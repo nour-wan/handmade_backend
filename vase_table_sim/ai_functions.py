@@ -66,9 +66,9 @@ def add_vase_to_table(table_image_path, vase_image_no_bg_pil_image, yolo_model):
     x_center, y_center, width, height = int(x_center), int(y_center), int(width), int(height)
 
     # تحويل صورة الفازة إلى تنسيق OpenCV RGBA
-    # vase = np.array(vase_image_no_bg_pil_image.convert("RGBA"))
-    # vase = cv2.cvtColor(vase, cv2.COLOR_RGBA2BGRA)
-    vase = cv2.imread(vase_image_no_bg_pil_image, cv2.IMREAD_UNCHANGED)
+    vase = np.array(vase_image_no_bg_pil_image.convert("RGBA"))
+    vase = cv2.cvtColor(vase, cv2.COLOR_RGBA2BGRA)
+    # vase = cv2.imread(vase_image_no_bg_pil_image, cv2.IMREAD_UNCHANGED)
     
     # استخراج قناة alpha لتحديد أين تبدأ الفازة فعليًا
     alpha = vase[:, :, 3]
