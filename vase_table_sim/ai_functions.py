@@ -60,12 +60,16 @@ def add_vase_to_table(table_image_path, vase_image_no_bg_pil_image, yolo_model):
     if table_box is None:
         raise ValueError("لم يتم اكتشاف طاولة في الصورة.")
 
-    x_center, y_center, width, height = map(int, table_box)
+    # x_center, y_center, width, height = map(int, table_box)
+    highest_confidence_box = max(boxes, key=lambda box: box.conf[0].item())
+    x_center, y_center, width, height = highest_confidence_box.xywh[0].tolist()
+    x_center, y_center, width, height = int(x_center), int(y_center), int(width), int(height)
 
     # تحويل صورة الفازة إلى تنسيق OpenCV RGBA
-    vase = np.array(vase_image_no_bg_pil_image.convert("RGBA"))
-    vase = cv2.cvtColor(vase, cv2.COLOR_RGBA2BGRA)
-
+    # vase = np.array(vase_image_no_bg_pil_image.convert("RGBA"))
+    # vase = cv2.cvtColor(vase, cv2.COLOR_RGBA2BGRA)
+    vase = cv2.imread(vase_image_no_bg_pil_image, cv2.IMREAD_UNCHANGED)
+    
     # استخراج قناة alpha لتحديد أين تبدأ الفازة فعليًا
     alpha = vase[:, :, 3]
     rows = np.any(alpha != 0, axis=1)
@@ -83,7 +87,7 @@ def add_vase_to_table(table_image_path, vase_image_no_bg_pil_image, yolo_model):
 
     # تحديد مكان الفازة بحيث قاعدتها تلامس سطح الطاولة
     x = int(x_center - new_width / 2)
-    y = int(y_center + height / 2 )- vase_resized.shape[0] +20
+    y = int(y_center - height / 2) - vase_resized.shape[0]+20
 
     # تأكد أن الفازة ضمن حدود الصورة
     if y < 0: y = 0
